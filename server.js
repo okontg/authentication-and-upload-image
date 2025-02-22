@@ -4,6 +4,7 @@ const CONNECT_TO_MONGO = require('./database/mongo-database');
 const auth__routes = require('./routes/authen-route');
 const WELCOME__PAGE = require('./routes/auth-user');
 const ADMIN_USER = require('./routes/auth-admin');
+const UPLOAD_IMAGE = require('./routes/image-route');
 
 CONNECT_TO_MONGO();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/authroutes', auth__routes);
 app.use('/api/home', WELCOME__PAGE);
 app.use('/api/admin', ADMIN_USER);
+app.use('/api/image', UPLOAD_IMAGE);
 
 
 app.listen(PORT, ()=>{
