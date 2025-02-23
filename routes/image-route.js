@@ -2,7 +2,7 @@ const express = require('express');
 const authorization = require('../middlewares/auth-authentication');
 const admin_only = require('../middlewares/admin-middleware');
 const multer = require('../middlewares/upload-image');
-const {upload_image_cloud, fetch_image} = require('../controller/image-controller');
+const {upload_image_cloud, fetch_image, delete_image} = require('../controller/image-controller');
 
 const router = express.Router();
 
@@ -18,5 +18,12 @@ router.get('/get-image',
   authorization, 
   fetch_image
 );
+
+router.delete('/:id',
+  authorization,
+  admin_only,
+  delete_image
+);
+
 
 module.exports = router;
