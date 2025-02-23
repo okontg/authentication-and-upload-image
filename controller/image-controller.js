@@ -1,6 +1,6 @@
 const image_schema = require('../models/image-schema');
 const {image_uploader} = require('../helpers/upload-helper');
-//const file_path = require('fs');
+const file_path = require('fs');
 //const cloudinary = require('../config/connect-cloudinary');
 
 const upload_image_cloud = async(req, res)=>{
@@ -26,7 +26,7 @@ const upload_image_cloud = async(req, res)=>{
     await image_to_upload.save();
 
     //delete the image from local storage/file
-    //file_path.unlinkSync(req.file.path);
+    file_path.unlinkSync(req.file.path);
 
     res.status(202).json({
       success : true,
@@ -43,4 +43,26 @@ const upload_image_cloud = async(req, res)=>{
   }
 };
 
-module.exports = {upload_image_cloud};
+//fetch the images
+const fetch_image = async(req, res)=>{
+  try{
+    const access_image = await image_schema.find({});
+    if(access_image){
+      res.status(200).json({
+        success : true,
+        message : 'Get images successfully.',
+        access_image
+      })
+    }
+
+  }
+  catch(error){
+    console.log('can get the images', error);
+    res.status(401).json({
+      success : false,
+      message : 'Access failed! Please try again.'
+    })
+  }
+}
+
+module.exports = {upload_image_cloud, fetch_image};
