@@ -3,16 +3,18 @@ const Cloudinary = require('../config/connect-cloudinary');
 
 const image_uploader = async(filePath)=>{
   try{
-    const load_image = Cloudinary.uploader.upload(filePath);
+    const image_details = await Cloudinary.uploader.upload(filePath);
     return {
-      url : load_image.secure_url,
-      publicId : load_image.public_id
-    }
+      url : image_details.secure_url,
+      publicId : image_details.public_id
+    };
   }
   catch(error){
     console.error('Can not upload the image to cloudinary', error);
-    throw new Error('Failed to upload the iamge to cloudinary.')
+    throw new Error('Failed to upload the image to cloudinary.')
   }
 }
 
-module.exports = image_uploader;
+module.exports = {
+  image_uploader
+}

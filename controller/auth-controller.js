@@ -90,7 +90,7 @@ const loggingUser = async (req, res)=>{
         userId : getD__current__user._id,
         role : getD__current__user.role
       },process.env.JWT_SECRET_KEY,{
-        expiresIn : '30s'
+        expiresIn : '30m'
       }
     )
 

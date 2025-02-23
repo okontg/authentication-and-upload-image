@@ -4,7 +4,7 @@ const path = require('path');
 //upload the image to images folder
 const multer_store = multer.diskStorage({
   destination : function(req, file, cb){
-    cb(null, images)
+    cb(null, 'images')
   },
   filename : function(req, file, cb){
     cb(null,
@@ -24,7 +24,7 @@ const file_an_image = (req, file, cb)=>{
 }
 
 //export multer
-module.exports({
+module.exports = multer({
   storage : multer_store,
   image_filter : file_an_image,
   limit :{

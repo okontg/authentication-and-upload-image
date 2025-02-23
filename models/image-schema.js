@@ -1,6 +1,5 @@
 //---------------mongoose image schema
 const mongoose = require('mongoose');
-const { applyTimestamps } = require('./schema');
 
 const image_schema = new mongoose.Schema({
   url : {

@@ -24,7 +24,7 @@ const jwt__authorlization__token = (req, res, next)=>{
   //decode the token
   try{
     const verify__token = jwt.verify(split__token, process.env.JWT_SECRET_KEY);
-    console.log(verify__token);
+    //console.log(verify__token);
     req.userInfo = verify__token;
     
     next();

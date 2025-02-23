@@ -1,21 +1,21 @@
 const image_schema = require('../models/image-schema');
-const cloudinary = require('../config/connect-cloudinary');
-const uploader_helper = require('../helpers/upload-helper');
-const file_path = require('fs');
+const {image_uploader} = require('../helpers/upload-helper');
+//const file_path = require('fs');
+//const cloudinary = require('../config/connect-cloudinary');
 
-const image_uploader = async(req, res)=>{
+const upload_image_cloud = async(req, res)=>{
   try{
     //check if the file is missing
     if(!req.file){
       console.log('this file is not found');
       return res.status(400).json({
         success : false,
-        message : 'file not found'
+        message : 'file not found, Please upload an image.'
       });
     }
 
     //upload to cloudinary
-    const {url, publicId} = await uploader_helper(req.file.path);
+    const {url, publicId} = await image_uploader(req.file.path);
 
     //store it to the database/ mongodb
     const image_to_upload = new image_schema({
@@ -39,10 +39,8 @@ const image_uploader = async(req, res)=>{
     res.status(500).json({
       success : false,
       message : 'Can not upload the image'
-    })
+    });
   }
-}
+};
 
-module.exports = ({
-  image_uploader
-})
+module.exports = {upload_image_cloud};
