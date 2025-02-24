@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const registerUser = async(req,res)=>{
   try{
     //get the user details for the models folder
-    const {username, email, password, role} = req.body
+    const {username, email, password, role} = req.body;
 
     //check if the user existed in out database. check for existing user
     const unique__user = await User.findOne({$or : [{username}, {email}]});
@@ -112,4 +112,49 @@ const loggingUser = async (req, res)=>{
   }
 }
 
-module.exports = {registerUser, loggingUser}
+//change password
+const change_password = async(req, res)=>{
+  try{
+    const user_id = req.userInfo.userId;
+    const {old_password, new_password} = req.body;
+    //current user
+    const current_user = await User.findById(user_id);
+    if(!current_user){
+      res.status(404).json({
+        success : false,
+        message : 'Login to change the password.'
+      });
+    }
+    //compare the old the old password with the current password
+    const isPassword_matched = await bcrypt_js.compare(old_password, current_user.password);
+    if(!isPassword_matched){
+      res.status(401).json({
+        success : false,
+        message : 'Incorrect password'
+      })
+    }
+
+    //hash the password
+    const salt = await bcrypt_js.genSalt(10);
+    const newly_password = await bcrypt_js.hash(new_password, salt);
+    
+    //update password
+    current_user.password = newly_password;
+    await current_user.save();
+
+    res.status(201).json({
+      success : false,
+      message : 'Password updated successfully.'
+    });
+
+  }
+  catch(error){
+    console.log(`user not found, can't change the password ${error}`);
+    res.status(404).json({
+      success : false,
+      message : 'Not authorize! You can not change this password.'
+    })
+  }
+}
+
+module.exports = {registerUser, loggingUser, change_password}
