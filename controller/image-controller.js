@@ -46,12 +46,28 @@ const upload_image_cloud = async(req, res)=>{
 //fetch the images
 const fetch_image = async(req, res)=>{
   try{
-    const access_image = await image_schema.find({});
-    if(access_image){
+    //pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+    const skip = (page -1) * limit;
+
+    //sorting
+    const sortBy = req.query.sortBy || 'createdAt'
+    const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+    const totalImages = await image_schema.countDocuments();
+    const totalPages = Math.ceil(totalImages / limit);
+
+    const sorting = {};
+    sorting[sortBy] = sortOrder;
+
+    const Images = await image_schema.find().sort(sorting).skip(skip).limit(limit);
+    if(Images){
       res.status(200).json({
         success : true,
-        message : 'Get images successfully.',
-        access_image
+        currentPage : page,
+        totalImages : totalImages,
+        totalPages : totalPages,
+        data : Images
       })
     }
 
